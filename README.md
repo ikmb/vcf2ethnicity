@@ -1,7 +1,8 @@
 ![](images/ikmb_bfx_logo.png)
 
-# Pipeline
+# IKMB vcf2ethnicity pipeline
 
+This pipeline performs a simple admix analysis against 1000 Genomes to determine the ethincity of a sample (form e.g., exome sequencing).
 ## Documentation 
 
 1. [What happens in this pipeline?](docs/pipeline.md)

@@ -25,15 +25,15 @@ run_name = ( params.run_name == false) ? "${workflow.sessionId}" : "${params.run
 WorkflowMain.initialise(workflow, params, log)
 WorkflowPipeline.initialise( params, log)
 
-include { MAIN } from './workflows/main
+include { VCF2ETHNICITY } from './workflows/vcf2ethnicity'
 
 multiqc_report = Channel.from([])
 
 workflow {
 
-	MAIN()
+    VCF2ETHNICITY()
 
-	 multiqc_report = multiqc_report.mix(MAIN.out.qc)
+    multiqc_report = multiqc_report.mix(VCF2ETHNICITY.out.qc)
 }
 
 workflow.onComplete {
