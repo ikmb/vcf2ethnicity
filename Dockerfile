@@ -9,10 +9,7 @@ ENV PATH /opt/conda/envs/vcf2ethnicity-1.0/bin:/opt/fastngsadmix:$PATH
 
 RUN apt-get -y update && apt-get -y install make wget g++ zlib1g zlib1g-dev  build-essential
 
-RUN mkdir -p /opt/fastngsadmix
-
-COPY assets/fastngsadmix/source/* /opt/fastngsadmix
+COPY assets/fastngsadmix/source /opt/fastngsadmix
 
 RUN cd /opt/fastngsadmix && make
 
- 
