@@ -33,7 +33,7 @@ workflow {
 
     VCF2ETHNICITY()
 
-    multiqc_report = multiqc_report.mix(VCF2ETHNICITY.out.qc)
+    multiqc_report = multiqc_report.mix(VCF2ETHNICITY.out.qc).toList()
 }
 
 workflow.onComplete {

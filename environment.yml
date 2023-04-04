@@ -6,4 +6,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::fastp=0.23.1
+  - bioconda::plink2

@@ -22,7 +22,7 @@ process PLINK_VCF {
     bim = base + ".bim"
 
     """
-    plink --vcf $vcf --make-bed --double-id --autosome --out $base
+    plink --vcf $vcf --snps-only --make-bed --out $base --autosome --double-id --max-alleles 2
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
