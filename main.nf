@@ -45,7 +45,6 @@ workflow.onComplete {
   email_fields['version'] = workflow.manifest.version
   email_fields['session'] = workflow.sessionId
   email_fields['runName'] = run_name
-  email_fields['Samples'] = params.samples
   email_fields['success'] = workflow.success
   email_fields['dateStarted'] = workflow.start
   email_fields['dateComplete'] = workflow.complete

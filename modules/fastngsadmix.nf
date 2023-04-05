@@ -17,11 +17,11 @@ process FAST_NGS_ADMIX {
     qfile = meta.sample_id + ".qopt"
 
     """
-    fastNGSadmix -plink "${meta.sample_id} -fname $ref -Nname $ref_freq -out ${meta.sample_id} -whichPops all"
+    fastNGSadmix -plink ${meta.sample_id} -fname $ref -Nname $ref_freq -out ${meta.sample_id} -whichPops all
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fastNGSadmix 1.0
+        fastNGSadmix: 1.0
     END_VERSIONS
     """
 }

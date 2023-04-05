@@ -12,15 +12,15 @@ process ADMIXTURE {
     tuple val(meta),path(bim),path(bed),path(fam)
 
     output:
-    tuple val(meta),path(q),path(p), emit: admix
+    tuple val(meta),path(bim),path(bed),path(fam),path(q),path(p), emit: admix
     path("versions.yml"), emit: versions
 
     script:
-    q = bed.getBaseName() + ".6.Q"
-    p = bed.getBaseName() + ".6.P"
+    q = bed.getBaseName() + ".25.Q"
+    p = bed.getBaseName() + ".25.P"
 
     """
-    admixture $bed 6 -j ${task.cpus}
+    admixture $bed 25 -j${task.cpus}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

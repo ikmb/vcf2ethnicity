@@ -9,7 +9,7 @@ process DISTRUCT {
     tag "${meta.sample_id}"
 
     input:
-    tuple val(meta),path(bim),path(bed),path(fam)
+    tuple val(meta),path(bim),path(bed),path(fam),path(q),path(p)
     path(pops)
 
     output:
