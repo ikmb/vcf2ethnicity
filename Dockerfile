@@ -6,7 +6,7 @@ ADD . .
 
 RUN mkdir -p /opt/ && cp -R /assets/fastngsadmix /opt/
 
-RUN apt-get -y update && apt-get -y install make wget g++ zlib1g zlib1g-dev  build-essential
+RUN apt-get -y update && apt-get -y install make wget g++ zlib1g zlib1g-dev  build-essential ruby-full ruby-dev
 
 RUN cd /opt/fastngsadmix && make
 

@@ -2,8 +2,6 @@ process DISTRUCT {
 
     label 'short_serial'
 
-    container 'quay.io/biocontainers/pbiotools:4.0.1--pyh7cba7a3_1'
-
     publishDir "${params.outdir}/PDF", mode: 'copy'
 
     tag "${meta.sample_id}"
