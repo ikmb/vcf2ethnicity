@@ -6,4 +6,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::plink2
+  - r-base=3.5.1
+  - bioconda::bioconductor-snpstats
