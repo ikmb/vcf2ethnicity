@@ -18,7 +18,10 @@ ch_g1k = Channel.from( [ file("${params.g1k}", checkIfExists: true) , file("${pa
 
 ch_pops = Channel.from(file(params.pops,checkIfExists: true))
 
-ch_admix_ref = Channel.from([ file(params.admix_ref), file(params.admix_freq) ])
+ch_admix_ref = Channel.from(
+    [ "Populations",file(params.admix_ref), file(params.admix_freq) ],
+    [ "Superpopulations",file(params.admix_ref_super),file(params.admix_freq_super) ]
+)
 
 Channel.fromPath(params.vcfs).map { v ->
 	tuple( [ sample_id: file(v).getSimpleName() ], file(v, checkIfExists: true), file("${v}.tbi", checkIfExists: true ))
@@ -50,9 +53,10 @@ workflow VCF2ETHNICITY {
 
 		ch_versions = ch_versions.mix(PLINK_VCF.out.versions)
 	
+	ch_plink_admix = PLINK_VCF.out.plink.combine(ch_admix_ref)
+
         FAST_NGS_ADMIX(
-            PLINK_VCF.out.plink,
-	    ch_admix_ref.collect()
+            ch_plink_admix
         )
 
        FAST_NGS_ADMIX_TRANSLATE(

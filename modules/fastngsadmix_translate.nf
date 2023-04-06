@@ -5,13 +5,13 @@ process FAST_NGS_ADMIX_TRANSLATE {
     tag "${meta.sample_id}"
 
     input:
-    tuple val(meta),path(qfile)
+    tuple val(meta),val(population),path(qfile)
 
     output:
     tuple val(meta),path(report)
 
     script:
-    report = meta.sample_id + ".fastngsadmix.txt"
+    report = meta.sample_id + "." + population + ".fastngsadmix.txt"
 
     """
         translate.rb -i $qfile > $report

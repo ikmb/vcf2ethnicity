@@ -46,6 +46,11 @@ options.outfile ? output_stream = File.new(options.outfile,'w') : output_stream 
 options.threshold ? threshold = options.threshold : threshold = 0.1
 
 population = {
+    "SAS" => "South Asian",
+    "EUR" => "European",
+    "AFR" => "African",
+    "EAS" => "East Asian",
+    "AMS" => "American",
     "GBR" => "British" ,
     "FIN" => "Finnish",
     "CHS" => "Han Chinese (South)",
