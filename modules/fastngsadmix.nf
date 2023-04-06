@@ -2,7 +2,7 @@ process FAST_NGS_ADMIX {
 
     tag "${meta.sample_id}"
 
-    publishDir "${params.outdir}/fastNGSadmix", mode: 'copy'
+    publishDir "${params.outdir}/fastNGSadmix/Raw", mode: 'copy'
 
     input:
     tuple val(meta),path(bim),path(bed),path(fam),val(ref_name),path(ref),path(ref_freq)
