@@ -6,7 +6,7 @@ process PLINK_VCF {
 
     tag "${meta.sample_id}"
 
-    container 'quay.io/biocontainers/plink:1.90b6.21--hec16e2b_3'
+    container 'quay.io/biocontainers/plink2:2.00a3.7--h9f5acd7_2'
 
     input:
     tuple val(meta),path(vcf),path(tbi)
@@ -22,11 +22,11 @@ process PLINK_VCF {
     bim = base + ".bim"
 
     """
-    plink --vcf $vcf --snps-only --make-bed --out $base --autosome --double-id --max-alleles 2
+    plink2 --vcf $vcf --snps-only --make-bed --out $base --autosome --double-id --max-alleles 2
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        plink \$( plink --version | sed -e "s/PLINK//g" | sed -e "s/ 64-bit.*//" )
+        plink2: \$( plink2 --version | sed -e "s/PLINK//g" | sed -e "s/ 64-bit.*//" )
     END_VERSIONS
     """	
 

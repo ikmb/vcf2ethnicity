@@ -1,9 +1,10 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: PIPELINE-VERSION
+name: vcf2ethnicity-1.0
 channels:
   - defaults
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::plink2
+  - r-base=3.5.1
+  - bioconda::bioconductor-snpstats

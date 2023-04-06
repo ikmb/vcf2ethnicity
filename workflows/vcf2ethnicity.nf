@@ -5,6 +5,7 @@ include { ADMIXTURE } from "./../modules/admixture"
 include { DISTRUCT } from "./../modules/distruct"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './../modules/custom/dumpsoftwareversions/main'
 include { FAST_NGS_ADMIX } from "./../modules/fastngsadmix"
+include { FAST_NGS_ADMIX_TRANSLATE } from "./../modules/fastngsadmix_translate"
 
 multiqc_files = Channel.from([])
 ch_versions = Channel.from([])
@@ -17,7 +18,10 @@ ch_g1k = Channel.from( [ file("${params.g1k}", checkIfExists: true) , file("${pa
 
 ch_pops = Channel.from(file(params.pops,checkIfExists: true))
 
-ch_admix_ref = Channel.from([ file(params.admix_ref), file(params.admix_freq) ])
+ch_admix_ref = Channel.from(
+    [ "Populations",file(params.admix_ref), file(params.admix_freq) ],
+    [ "Superpopulations",file(params.admix_ref_super),file(params.admix_freq_super) ]
+)
 
 Channel.fromPath(params.vcfs).map { v ->
 	tuple( [ sample_id: file(v).getSimpleName() ], file(v, checkIfExists: true), file("${v}.tbi", checkIfExists: true ))
@@ -49,12 +53,17 @@ workflow VCF2ETHNICITY {
 
 		ch_versions = ch_versions.mix(PLINK_VCF.out.versions)
 	
+	ch_plink_admix = PLINK_VCF.out.plink.combine(ch_admix_ref)
+
         FAST_NGS_ADMIX(
-            PLINK_VCF.out.plink,
-			ch_admix_ref.collect()
+            ch_plink_admix
         )
 
-		ch_versions = ch_versions.mix(FAST_NGS_ADMIX.out.versions)
+       FAST_NGS_ADMIX_TRANSLATE(
+           FAST_NGS_ADMIX.out.results
+       )
+
+       ch_versions = ch_versions.mix(FAST_NGS_ADMIX.out.versions)
 
     } 
 

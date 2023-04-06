@@ -6,8 +6,8 @@ process MULTIQC {
    path('*')
 
    output:
-   path('*.html'), emit: html
-
+   path('*.html'), emit: report
+  
    script:
 
    """
