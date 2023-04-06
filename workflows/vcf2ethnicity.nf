@@ -5,6 +5,7 @@ include { ADMIXTURE } from "./../modules/admixture"
 include { DISTRUCT } from "./../modules/distruct"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './../modules/custom/dumpsoftwareversions/main'
 include { FAST_NGS_ADMIX } from "./../modules/fastngsadmix"
+include { FAST_NGS_ADMIX_TRANSLATE } from "./../modules/fastngsadmix_translate"
 
 multiqc_files = Channel.from([])
 ch_versions = Channel.from([])
@@ -51,10 +52,14 @@ workflow VCF2ETHNICITY {
 	
         FAST_NGS_ADMIX(
             PLINK_VCF.out.plink,
-			ch_admix_ref.collect()
+	    ch_admix_ref.collect()
         )
 
-		ch_versions = ch_versions.mix(FAST_NGS_ADMIX.out.versions)
+       FAST_NGS_ADMIX_TRANSLATE(
+           FAST_NGS_ADMIX.out.results
+       )
+
+       ch_versions = ch_versions.mix(FAST_NGS_ADMIX.out.versions)
 
     } 
 
