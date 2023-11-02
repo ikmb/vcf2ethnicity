@@ -49,6 +49,7 @@ population = {
     "SAS" => "South Asian",
     "EUR" => "European",
     "AFR" => "African",
+    "AMR" => "Admixed American",
     "EAS" => "East Asian",
     "AMS" => "American",
     "GBR" => "British" ,
