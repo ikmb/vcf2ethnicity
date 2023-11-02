@@ -1,11 +1,12 @@
-include { BCFTOOLS_MERGE } from '../modules/bcftools/merge'
+include { BCFTOOLS_MERGE }              from '../modules/bcftools/merge'
 include { PLINK_VCF ; PLINK_VCF as PLINK_VCF_COMBINED } from '../modules/plink/vcf'
-include { MULTIQC } from './../modules/multiqc'
-include { ADMIXTURE } from "./../modules/admixture"
-include { DISTRUCT } from "./../modules/distruct"
+include { MULTIQC }                     from './../modules/multiqc'
+include { ADMIXTURE }                   from "./../modules/admixture"
+include { DISTRUCT }                    from "./../modules/distruct"
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './../modules/custom/dumpsoftwareversions/main'
-include { FAST_NGS_ADMIX } from "./../modules/fastngsadmix"
-include { FAST_NGS_ADMIX_TRANSLATE } from "./../modules/fastngsadmix_translate"
+include { FAST_NGS_ADMIX }              from "./../modules/fastngsadmix"
+include { FAST_NGS_ADMIX_TRANSLATE }    from "./../modules/fastngsadmix_translate"
+include { FASTNGSADMIX2EXCEL }          from "./../modules/fastngsadmix2excel"
 
 multiqc_files = Channel.from([])
 ch_versions = Channel.from([])
@@ -47,62 +48,67 @@ workflow VCF2ETHNICITY {
 
 	if ( 'fastngsadmix' in tools ) {
 
-        PLINK_VCF(
-            ch_vcfs
-		)
+            PLINK_VCF(
+                ch_vcfs
+            )
 
-		ch_versions = ch_versions.mix(PLINK_VCF.out.versions)
+            ch_versions = ch_versions.mix(PLINK_VCF.out.versions)
 	
-	ch_plink_admix = PLINK_VCF.out.plink.combine(ch_admix_ref)
+            ch_plink_admix = PLINK_VCF.out.plink.combine(ch_admix_ref)
 
-        FAST_NGS_ADMIX(
-            ch_plink_admix
-        )
+            FAST_NGS_ADMIX(
+                ch_plink_admix
+            )
 
-       FAST_NGS_ADMIX_TRANSLATE(
-           FAST_NGS_ADMIX.out.results
-       )
+            ch_versions = ch_versions.mix(FAST_NGS_ADMIX.out.versions)
 
-       ch_versions = ch_versions.mix(FAST_NGS_ADMIX.out.versions)
 
-    } 
+            FAST_NGS_ADMIX_TRANSLATE(
+                FAST_NGS_ADMIX.out.results
+            )
 
-    if ('admixture' in tools ) {
-        BCFTOOLS_MERGE(
-            ch_vcfs,
-            ch_g1k.collect()
-        )
+            FASTNGSADMIX2EXCEL(
+                FAST_NGS_ADMIX_TRANSLATE.out.report.map { m,p,r -> [ p,r ] }.groupTuple()
+            )
 
-        ch_versions = ch_versions.mix(BCFTOOLS_MERGE.out.versions)
+        } 
 
-        PLINK_VCF_COMBINED(
-            BCFTOOLS_MERGE.out.vcf
-        )
+        if ('admixture' in tools ) {
+            BCFTOOLS_MERGE(
+                ch_vcfs,
+                ch_g1k.collect()
+            )
 
-        ch_versions = ch_versions.mix(PLINK_VCF.out.versions)
+            ch_versions = ch_versions.mix(BCFTOOLS_MERGE.out.versions)
+
+            PLINK_VCF_COMBINED(
+                BCFTOOLS_MERGE.out.vcf
+            )
+
+            ch_versions = ch_versions.mix(PLINK_VCF.out.versions)
 	
-        ADMIXTURE(
-            PLINK_VCF.out.plink
-        )
+            ADMIXTURE(
+                PLINK_VCF.out.plink
+            )
 
-        ch_versions = ch_versions.mix(ADMIXTURE.out.versions)
+            ch_versions = ch_versions.mix(ADMIXTURE.out.versions)
 
-        DISTRUCT(
-            ADMIXTURE.out.admix,
-            ch_pops.collect()
-        )
+            DISTRUCT(
+                ADMIXTURE.out.admix,
+                ch_pops.collect()
+            )
 
 	}
 
-    CUSTOM_DUMPSOFTWAREVERSIONS(
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
+        CUSTOM_DUMPSOFTWAREVERSIONS(
+            ch_versions.unique().collectFile(name: 'collated_versions.yml')
+        )
 
-    multiqc_files = multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml)
+        multiqc_files = multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml)
 
-    MULTIQC(
-        multiqc_files.collect()
-    )
+        MULTIQC(
+            multiqc_files.collect()
+        )
 
 	emit:
 	qc = MULTIQC.out.report

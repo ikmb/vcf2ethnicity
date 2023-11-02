@@ -6,11 +6,13 @@ ADD . .
 
 RUN mkdir -p /opt/ && cp -R /assets/fastngsadmix /opt/
 
-RUN apt-get -y update && apt-get -y install make wget g++ zlib1g zlib1g-dev  build-essential ruby-full ruby-dev
-
+RUN apt-get -y update && apt-get -y install make wget g++ zlib1g zlib1g-dev build-essential unzip libyaml-dev libssl-dev
 RUN cd /opt/fastngsadmix && make
 
 RUN conda env create -f /environment.yml && conda clean -a
 
 ENV PATH /opt/conda/envs/vcf2ethnicity-1.0/bin:/opt/fastngsadmix:$PATH
+
+RUN cd /opt && wget https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.2.tar.gz && tar -xvf ruby-3.2.2.tar.gz && cd ruby-3.2.2 && ./configure && make -j2 install 
+RUN gem install rubyXL
 
