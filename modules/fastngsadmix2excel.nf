@@ -1,7 +1,5 @@
 process FASTNGSADMIX2EXCEL {
 
-    container 'ikmb/exome-seq:5.4'
-
     publishDir "${params.outdir}/fastNGSadmix", mode: 'copy'
 
     tag "ALL"
