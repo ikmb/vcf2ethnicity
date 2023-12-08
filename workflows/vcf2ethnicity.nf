@@ -85,10 +85,10 @@ workflow VCF2ETHNICITY {
                 BCFTOOLS_MERGE.out.vcf
             )
 
-            ch_versions = ch_versions.mix(PLINK_VCF.out.versions)
+            ch_versions = ch_versions.mix(PLINK_VCF_COMBINED.out.versions)
 	
             ADMIXTURE(
-                PLINK_VCF.out.plink
+                PLINK_VCF_COMBINED.out.plink
             )
 
             ch_versions = ch_versions.mix(ADMIXTURE.out.versions)
